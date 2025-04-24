@@ -24,8 +24,11 @@ public class DateUtil {
 			throw new RuntimeException("Invalid month: " + month + ", expected range 1-12");
 		if (year < 1700 || year > 2024)
 			throw new RuntimeException("Invalid year: " + year + ", expected range 1700-2024");
-		if (day > monthDuration(month, year))
-			throw new RuntimeException("Invalid day: " + day + ", max day: " + monthDuration(month, year));
+		if (day > monthDuration(month, year)) {
+		    System.out.println("invalid day");
+		    throw new RuntimeException("Invalid day: " + day + ", max day: " + monthDuration(month, year));
+		}
+
 		this.day = day;
 		this.month = month;
 		this.year = year;
