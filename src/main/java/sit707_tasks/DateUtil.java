@@ -1,112 +1,62 @@
 package sit707_tasks;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
- * @author Ahsan Habib
+ * @author Updated
  */
 public class DateUtil {
 
-	// Months in order 0-11 maps to January-December.
-	private static String[] MONTHS = new String[] {
-			"January", "February", "March", "April", "May", "June", 
-			"July", "August", "September", "October", "November", "December"
-	};
-	
-	private int day, month, year;
-	
+	private LocalDate date;
+
+	// Formatter for user-friendly output
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+
 	/*
 	 * Constructs object from given day, month and year.
 	 */
 	public DateUtil(int day, int month, int year) {
-		// Is supplied day/month/year a valid date?
-		if (day < 1 || day > 31)
-			throw new RuntimeException("Invalid day: " + day + ", expected range 1-31");
-		if (month < 1 || month > 12)
-			throw new RuntimeException("Invalid month: " + month + ", expected range 1-12");
-		if (year < 1700 || year > 2024)
-			throw new RuntimeException("Invalid year: " + year + ", expected range 1700-2024");
-		if (day > monthDuration(month, year)) {
-		    System.out.println("invalid day");
-		    throw new RuntimeException("Invalid day: " + day + ", max day: " + monthDuration(month, year));
+		// Validate input and construct date
+		if (day < 1 || month < 1 || month > 12 || year < 1700 || year > 2024) {
+			throw new IllegalArgumentException("Invalid date components.");
 		}
-
-		this.day = day;
-		this.month = month;
-		this.year = year;
+		try {
+			this.date = LocalDate.of(year, month, day);
+		} catch (DateTimeException e) {
+			throw new IllegalArgumentException("Invalid date: " + e.getMessage());
+		}
 	}
 
+	/*
+	 * Adds given number of days (can be negative) and returns a new DateUtil object.
+	 */
+	public DateUtil calculateFutureDate(int daysToAdd) {
+		LocalDate newDate = this.date.plusDays(daysToAdd);
+		return new DateUtil(newDate.getDayOfMonth(), newDate.getMonthValue(), newDate.getYear());
+	}
+
+	/*
+	 * Getters
+	 */
 	public int getDay() {
-		return day;
+		return date.getDayOfMonth();
 	}
 
 	public int getMonth() {
-		return month;
+		return date.getMonthValue();
 	}
 
 	public int getYear() {
-		return year;
+		return date.getYear();
 	}
-	
-	/**
-	 * Increment one day.
+
+	/*
+	 * User-friendly string output
 	 */
-	public void increment() {
-		if (day < monthDuration(month, year)) {
-			// At least 1 day remaining in current month of year.
-			day++;
-		} else if (month < 12) {
-			// Last day of a month AND month is less than December, so +1d is first day of next month.
-			day = 1;
-			month++;
-		} else {
-			// Month is December, so +1d is 1st January next year.
-			day = 1;
-			month = 1;
-			year++;
-		}
-	}
-	
-	/**
-	 * Decrement one day from current date.
-	 */
-	public void decrement() {
-		if (day > 1) {
-			day--;
-		} else if (month > 1) {
-			month--;
-			day = monthDuration(month, year);
-		} else {
-			month = 12;
-			year--;
-			day = monthDuration(month, year);
-		}
-	}
-	
-	/**
-	 * Calculate duration of current month of year.
-	 * @param month
-	 * @param year
-	 * @return
-	 */
-	public static int monthDuration(int month, int year) {		
-		if (month == 2 && year % 4 == 0) {
-			// February leap year?
-			return 29;			
-		} else if (month == 2) {  
-			// normal 28 days February
-			return 28;
-			
-		} else if (month == 4 || month == 6 || month == 9 || month == 11) {
-			// 30 days' months
-			return 30;			
-		}
-		return 31;  // rest are 31 days' months.
-	}
-	
-	/**
-	 * User friendly output.
-	 */
+	@Override
 	public String toString() {
-		return day + " " + MONTHS[month - 1] + " " + year;
+		return formatter.format(this.date);
 	}
-	
 }

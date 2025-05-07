@@ -4,27 +4,26 @@ import java.util.Random;
 
 /**
  * Hello world!
- * @author Ahsan Habib
+ * Modified for calculateFutureDate().
  */
-public class Main 
-{
-    public static void main( String[] args )
-    {   
-    	/*
-    	 * January max boundary area: max-1, max+1
-    	 */
-    	System.out.println("January max: increment should go to February.");
-    	DateUtil date = new DateUtil(31, 1, 2024);
+public class Main {
+    public static void main(String[] args) {
+
+        /*
+         * January max boundary area: max-1, max+1
+         */
+        System.out.println("January max: increment should go to February.");
+        DateUtil date = new DateUtil(31, 1, 2024);
         System.out.println(date);
-        date.increment();
+        date = date.calculateFutureDate(1);
         System.out.println(date);
-        
+
         System.out.println("January max: decrement should be 30 January.");
-    	date = new DateUtil(31, 1, 2024);
+        date = new DateUtil(31, 1, 2024);
         System.out.println(date);
-        date.decrement();
+        date = date.calculateFutureDate(-1);
         System.out.println(date);
-        
+
         /*
          * January nominal (somewhere between min and max)
          */
@@ -32,22 +31,22 @@ public class Main
         int rand_day_1_to_31 = 1 + new Random().nextInt(31);
         date = new DateUtil(rand_day_1_to_31, 1, 2024);
         System.out.println(date);
-        date.increment();
+        date = date.calculateFutureDate(1);
         System.out.println(date);
-        
+
         /*
          * January min boundary area: min+1, min-1
          */
         System.out.println("January min: increment should be 2nd January.");
-    	date = new DateUtil(1, 1, 2024);
+        date = new DateUtil(1, 1, 2024);
         System.out.println(date);
-        date.increment();
+        date = date.calculateFutureDate(1);
         System.out.println(date);
-        
+
         System.out.println("January min: decrement should be 31 December previous year.");
         date = new DateUtil(1, 1, 2024);
         System.out.println(date);
-        date.decrement();
-        System.out.println(date);        
+        date = date.calculateFutureDate(-1);
+        System.out.println(date);
     }
 }
